@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>emcard.health — البطاقة الطبية الطارئة</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&family=Playfair+Display:wght@700;900&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --blue: #0066cc; --blue-light: #e8f2ff; --blue-dark: #004499;
+  --teal: #00897b; --teal-light: #e0f2f1;
+  --red-alert: #d32f2f; --red-light: #ffebee;
+  --ink: #0a0f1e; --ink-mid: #374151; --ink-muted: #6b7280;
+  --border: #e8ecf0; --white: #ffffff; --off-white: #f8fafc;
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.06);
+  --shadow-md: 0 4px 20px rgba(0,0,0,0.08);
+  --shadow-lg: 0 20px 60px rgba(0,0,0,0.1), 0 8px 24px rgba(0,0,0,0.06);
+  --shadow-blue: 0 8px 32px rgba(0,102,204,0.15);
+}
+html { scroll-behavior: smooth; }
+body { font-family: 'IBM Plex Sans Arabic', sans-serif; background: var(--white); color: var(--ink); overflow-x: hidden; line-height: 1.6; }
+.top-bar { background: var(--blue); color: white; text-align: center; padding: 0.6rem 1rem; font-size: 0.78rem; font-weight: 500; }
+nav { background: rgba(255,255,255,0.95); backdrop-filter: blur(20px); border-bottom: 1px solid var(--border); padding: 1rem 2rem; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100; animation: slideDown 0.5s ease both; }
+@keyframes slideDown { from { transform: translateY(-100%); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+.nav-logo { display: flex; align-items: center; gap: 0.6rem; text-decoration: none; }
+.nav-cross { width: 32px; height: 32px; background: linear-gradient(135deg, var(--blue), var(--teal)); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: white; font-size: 1.1rem; box-shadow: var(--shadow-blue); }
+.nav-brand { font-size: 0.95rem; font-weight: 700; color: var(--ink); }
+.nav-domain { font-size: 0.65rem; color: var(--ink-muted); font-family: monospace; direction: ltr; }
+.nav-links { display: flex; align-items: center; gap: 1.5rem; }
+.nav-links a { font-size: 0.85rem; color: var(--ink-mid); text-decoration: none; transition: color 0.2s; }
+.nav-links a:hover { color: var(--blue); }
+.nav-cta { background: var(--blue); color: white; padding: 0.5rem 1.2rem; border-radius: 8px; font-size: 0.85rem; font-weight: 600; text-decoration: none; box-shadow: var(--shadow-blue); }
+.hero { min-height: 92vh; background: linear-gradient(160deg, #f0f7ff 0%, #ffffff 40%, #f0fdf9 100%); display: flex; align-items: center; padding: 4rem 2rem; position: relative; overflow: hidden; }
+.hero::before { content: ''; position: absolute; width: 600px; height: 600px; border-radius: 50%; background: radial-gradient(circle, rgba(0,102,204,0.06) 0%, transparent 70%); top: -200px; left: -200px; animation: pulse 6s ease-in-out infinite; }
+.hero::after { content: ''; position: absolute; width: 400px; height: 400px; border-radius: 50%; background: radial-gradient(circle, rgba(0,137,123,0.06) 0%, transparent 70%); bottom: -100px; right: -100px; animation: pulse 8s ease-in-out infinite reverse; }
+@keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.1); opacity: 0.7; } }
+.hero-inner { max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center; position: relative; z-index: 2; width: 100%; }
+.hero-text { animation: fadeRight 0.8s ease both; }
+@keyframes fadeRight { from { opacity: 0; transform: translateX(30px); } to { opacity: 1; transform: translateX(0); } }
+@keyframes fadeLeft { from { opacity: 0; transform: translateX(-30px); } to { opacity: 1; transform: translateX(0); } }
+.hero-tag { display: inline-flex; align-items: center; gap: 0.5rem; background: var(--blue-light); color: var(--blue); border: 1px solid rgba(0,102,204,0.2); padding: 0.4rem 1rem; border-radius: 999px; font-size: 0.78rem; font-weight: 600; margin-bottom: 1.5rem; animation: fadeRight 0.7s 0.1s ease both; }
+.hero-tag::before { content: '🏥'; }
+.hero-title { font-size: clamp(2rem, 4vw, 3.2rem); font-weight: 700; line-height: 1.2; color: var(--ink); margin-bottom: 1.2rem; animation: fadeRight 0.7s 0.2s ease both; }
+.hero-title strong { background: linear-gradient(135deg, var(--blue), var(--teal)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; display: block; }
+.hero-sub { font-size: 1rem; color: var(--ink-mid); line-height: 1.8; margin-bottom: 2rem; max-width: 440px; animation: fadeRight 0.7s 0.3s ease both; }
+.hero-btns { display: flex; gap: 1rem; flex-wrap: wrap; animation: fadeRight 0.7s 0.4s ease both; }
+.btn-main { background: linear-gradient(135deg, var(--blue), #0052a3); color: white; padding: 0.85rem 1.8rem; border-radius: 12px; font-family: inherit; font-size: 0.95rem; font-weight: 600; text-decoration: none; border: none; cursor: pointer; box-shadow: var(--shadow-blue); transition: transform 0.2s; display: inline-flex; align-items: center; gap: 0.5rem; }
+.btn-main:hover { transform: translateY(-2px); }
+.btn-ghost { background: white; color: var(--ink-mid); padding: 0.85rem 1.8rem; border-radius: 12px; font-family: inherit; font-size: 0.95rem; font-weight: 500; text-decoration: none; border: 1.5px solid var(--border); cursor: pointer; transition: border-color 0.2s, color 0.2s; display: inline-flex; align-items: center; gap: 0.5rem; }
+.btn-ghost:hover { border-color: var(--blue); color: var(--blue); }
+.hero-stats { display: flex; gap: 2rem; margin-top: 2.5rem; padding-top: 2rem; border-top: 1px solid var(--border); animation: fadeRight 0.7s 0.5s ease both; }
+.hero-stat-num { font-size: 1.6rem; font-weight: 700; color: var(--blue); line-height: 1; }
+.hero-stat-label { font-size: 0.72rem; color: var(--ink-muted); margin-top: 0.2rem; }
+.hero-visual { animation: fadeLeft 0.8s 0.2s ease both; position: relative; }
+.floating-card { background: white; border-radius: 24px; box-shadow: var(--shadow-lg); overflow: hidden; border: 1px solid var(--border); animation: float 4s ease-in-out infinite; position: relative; z-index: 2; }
+@keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+.fc-header { background: linear-gradient(135deg, var(--blue), var(--teal)); padding: 1.2rem 1.5rem; display: flex; align-items: center; justify-content: space-between; }
+.fc-header-left h3 { font-size: 0.95rem; font-weight: 700; color: white; }
+.fc-header-left p { font-size: 0.65rem; color: rgba(255,255,255,0.75); margin-top: 0.1rem; direction: ltr; }
+.fc-logo { width: 40px; height: 40px; background: rgba(255,255,255,0.2); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.3rem; }
+.fc-body { padding: 1.2rem 1.5rem; }
+.fc-patient { display: flex; align-items: center; gap: 0.8rem; padding-bottom: 1rem; border-bottom: 1px solid var(--border); margin-bottom: 1rem; }
+.fc-avatar { width: 48px; height: 48px; border-radius: 50%; background: linear-gradient(135deg, var(--blue-light), var(--teal-light)); display: flex; align-items: center; justify-content: center; font-size: 1.4rem; flex-shrink: 0; }
+.fc-name { font-weight: 700; font-size: 0.95rem; color: var(--ink); }
+.fc-meta { font-size: 0.7rem; color: var(--ink-muted); margin-top: 0.15rem; }
+.fc-rows { display: flex; flex-direction: column; gap: 0.7rem; }
+.fc-row { display: flex; align-items: center; gap: 0.75rem; padding: 0.6rem 0.8rem; border-radius: 10px; background: var(--off-white); border: 1px solid var(--border); transition: background 0.2s; }
+.fc-row:hover { background: var(--blue-light); }
+.fc-row-icon { width: 28px; height: 28px; border-radius: 7px; display: flex; align-items: center; justify-content: center; font-size: 0.85rem; flex-shrink: 0; }
+.fc-row-icon.alert { background: var(--red-light); }
+.fc-row-icon.med { background: var(--blue-light); }
+.fc-row-icon.diag { background: #fff3e0; }
+.fc-row-icon.contact { background: var(--teal-light); }
+.fc-row-info { flex: 1; }
+.fc-row-label { font-size: 0.6rem; color: var(--ink-muted); font-weight: 500; }
+.fc-row-value { font-size: 0.8rem; font-weight: 600; color: var(--ink); }
+.fc-qr { margin: 1rem 1.5rem; padding: 0.8rem 1rem; background: var(--off-white); border-radius: 12px; border: 1px dashed var(--border); display: flex; align-items: center; gap: 1rem; }
+.qr-box { width: 48px; height: 48px; background: var(--ink); border-radius: 6px; display: grid; grid-template-columns: repeat(6,1fr); gap: 1.5px; padding: 4px; flex-shrink: 0; }
+.qr-px { background: white; border-radius: 0.5px; }
+.qr-px.b { background: var(--ink); }
+.fc-qr-text { font-size: 0.65rem; color: var(--ink-muted); line-height: 1.6; }
+.fc-qr-text strong { display: block; color: var(--blue); font-family: monospace; direction: ltr; font-size: 0.7rem; }
+.badge-float { position: absolute; background: white; border-radius: 12px; padding: 0.6rem 0.9rem; box-shadow: var(--shadow-md); border: 1px solid var(--border); font-size: 0.75rem; font-weight: 600; display: flex; align-items: center; gap: 0.4rem; z-index: 3; }
+.badge-float.top-right { top: -16px; left: -20px; animation: float 5s 1s ease-in-out infinite; }
+.badge-float.bottom-left { bottom: -16px; right: -20px; animation: float 5s 2s ease-in-out infinite; }
+.badge-dot { width: 8px; height: 8px; border-radius: 50%; }
+.badge-dot.green { background: #22c55e; animation: blink 2s ease-in-out infinite; }
+.badge-dot.blue { background: var(--blue); }
+@keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+.features { padding: 6rem 2rem; background: var(--white); max-width: 1100px; margin: 0 auto; }
+.section-header { text-align: center; margin-bottom: 3.5rem; }
+.section-tag { display: inline-block; background: var(--blue-light); color: var(--blue); font-size: 0.72rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; padding: 0.3rem 0.9rem; border-radius: 999px; margin-bottom: 0.8rem; }
+.section-title { font-size: clamp(1.6rem, 3vw, 2.3rem); font-weight: 700; color: var(--ink); line-height: 1.3; }
+.section-sub { margin-top: 0.8rem; font-size: 0.95rem; color: var(--ink-muted); max-width: 480px; margin-left: auto; margin-right: auto; }
+.features-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; }
+.feature-item { background: var(--white); border: 1.5px solid var(--border); border-radius: 20px; padding: 1.8rem; transition: border-color 0.25s, box-shadow 0.25s, transform 0.25s; position: relative; overflow: hidden; }
+.feature-item::before { content: ''; position: absolute; inset: 0; background: linear-gradient(135deg, var(--blue-light), transparent); opacity: 0; transition: opacity 0.3s; }
+.feature-item:hover { border-color: var(--blue); box-shadow: var(--shadow-blue); transform: translateY(-4px); }
+.feature-item:hover::before { opacity: 1; }
+.feature-icon-wrap { width: 52px; height: 52px; border-radius: 14px; background: var(--blue-light); display: flex; align-items: center; justify-content: center; font-size: 1.4rem; margin-bottom: 1.2rem; position: relative; }
+.feature-h { font-size: 1rem; font-weight: 700; color: var(--ink); margin-bottom: 0.5rem; position: relative; }
+.feature-p { font-size: 0.83rem; color: var(--ink-muted); line-height: 1.7; position: relative; }
+.how { padding: 6rem 2rem; background: var(--off-white); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+.how-inner { max-width: 860px; margin: 0 auto; }
+.steps-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 2rem; margin-top: 3.5rem; position: relative; }
+.steps-grid::before { content: ''; position: absolute; top: 26px; right: 16%; left: 16%; height: 2px; background: linear-gradient(90deg, var(--blue), var(--teal)); opacity: 0.3; }
+.step-item { text-align: center; position: relative; }
+.step-num { width: 52px; height: 52px; border-radius: 50%; background: linear-gradient(135deg, var(--blue), var(--teal)); color: white; font-size: 1.1rem; font-weight: 700; display: flex; align-items: center; justify-content: center; margin: 0 auto 1.2rem; box-shadow: var(--shadow-blue); position: relative; z-index: 1; }
+.step-title { font-weight: 700; font-size: 1rem; color: var(--ink); margin-bottom: 0.5rem; }
+.step-desc { font-size: 0.83rem; color: var(--ink-muted); line-height: 1.7; }
+.alert-section { padding: 5rem 2rem; background: var(--white); }
+.alert-inner { max-width: 860px; margin: 0 auto; background: linear-gradient(135deg, #fff5f5, #fff); border: 1.5px solid #fecaca; border-radius: 24px; padding: 2.5rem; display: flex; gap: 2rem; align-items: flex-start; }
+.alert-icon-big { width: 64px; height: 64px; background: var(--red-light); border-radius: 16px; display: flex; align-items: center; justify-content: center; font-size: 2rem; flex-shrink: 0; }
+.alert-content h3 { font-size: 1.2rem; font-weight: 700; color: var(--red-alert); margin-bottom: 0.5rem; }
+.alert-content p { font-size: 0.9rem; color: var(--ink-mid); line-height: 1.8; margin-bottom: 1rem; }
+.alert-pills { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+.alert-pill { background: var(--red-light); color: var(--red-alert); font-size: 0.75rem; font-weight: 600; padding: 0.3rem 0.8rem; border-radius: 999px; border: 1px solid #fecaca; }
+.cta-section { padding: 6rem 2rem; background: linear-gradient(135deg, var(--blue), var(--teal)); text-align: center; position: relative; overflow: hidden; }
+.cta-section::before { content: ''; position: absolute; width: 500px; height: 500px; border-radius: 50%; background: rgba(255,255,255,0.05); top: -200px; right: -100px; }
+.cta-content { position: relative; z-index: 2; }
+.cta-section h2 { font-size: clamp(1.8rem, 4vw, 2.8rem); font-weight: 700; color: white; margin-bottom: 1rem; }
+.cta-section p { color: rgba(255,255,255,0.85); font-size: 1rem; max-width: 480px; margin: 0 auto 2rem; line-height: 1.8; }
+.btn-white { background: white; color: var(--blue); padding: 0.9rem 2rem; border-radius: 12px; font-family: inherit; font-size: 1rem; font-weight: 700; text-decoration: none; border: none; cursor: pointer; transition: transform 0.2s; display: inline-flex; align-items: center; gap: 0.5rem; box-shadow: 0 8px 32px rgba(0,0,0,0.15); }
+.btn-white:hover { transform: translateY(-2px); }
+footer { background: var(--ink); padding: 2.5rem 2rem; text-align: center; }
+.footer-logo { display: flex; align-items: center; justify-content: center; gap: 0.5rem; margin-bottom: 1rem; }
+.footer-cross { width: 28px; height: 28px; background: linear-gradient(135deg, var(--blue), var(--teal)); border-radius: 7px; display: flex; align-items: center; justify-content: center; color: white; font-size: 0.9rem; }
+.footer-brand { font-size: 0.9rem; font-weight: 700; color: white; }
+footer p { font-size: 0.78rem; color: #4b5563; margin-top: 0.3rem; }
+footer a { color: #6b7280; text-decoration: none; }
+.reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.7s ease, transform 0.7s ease; }
+.reveal.visible { opacity: 1; transform: translateY(0); }
+@media (max-width: 900px) {
+  .hero-inner { grid-template-columns: 1fr; gap: 3rem; }
+  .hero-visual { order: -1; }
+  .badge-float { display: none; }
+  .features-grid { grid-template-columns: 1fr 1fr; }
+  .steps-grid { grid-template-columns: 1fr; }
+  .steps-grid::before { display: none; }
+  .alert-inner { flex-direction: column; }
+  nav .nav-links { display: none; }
+}
+@media (max-width: 600px) {
+  .features-grid { grid-template-columns: 1fr; }
+  .hero-stats { flex-wrap: wrap; gap: 1rem; }
+}
+</style>
+</head>
+<body>
+<div class="top-bar">⚡ مشروع تجريبي — طور التطوير | Qassim Health Cluster · PEM Pathway</div>
+<nav>
+  <a href="#" class="nav-logo">
+    <div class="nav-cross">✚</div>
+    <div><div class="nav-brand">بطاقة الطوارئ الطبية</div><div class="nav-domain">emcard.health</div></div>
+  </a>
+  <div class="nav-links">
+    <a href="#how">كيف تعمل</a>
+    <a href="#features">المميزات</a>
+    <a href="mailto:fahad.radhi.alharbi@gmail.com" class="nav-cta">تواصل معنا</a>
+  </div>
+</nav>
+<section class="hero">
+  <div class="hero-inner">
+    <div class="hero-text">
+      <div class="hero-tag">Qassim Health Cluster — مسار طوارئ الأطفال</div>
+      <h1 class="hero-title">معلوماتك الطبية<strong>في ثوانٍ معدودة</strong></h1>
+      <p class="hero-sub">بطاقة رقمية ذكية تحمل ملفك الطبي الحرج — يمسحها الطاقم الطبي فوراً في أي حالة طارئة، بدون تطبيق أو كلمة سر. تبدأ من مسار طوارئ الأطفال وتتوسع لجميع المرضى.</p>
+      <div class="hero-btns">
+        <a href="#how" class="btn-main">🚀 كيف تعمل؟</a>
+        <a href="#card" class="btn-ghost">👁 شاهد البطاقة</a>
+      </div>
+      <div class="hero-stats">
+        <div class="hero-stat"><div class="hero-stat-num">٣ث</div><div class="hero-stat-label">وصول للمعلومات</div></div>
+        <div class="hero-stat"><div class="hero-stat-num">٢٤/٧</div><div class="hero-stat-label">متاح دائماً</div></div>
+        <div class="hero-stat"><div class="hero-stat-num">٠</div><div class="hero-stat-label">تطبيقات مطلوبة</div></div>
+      </div>
+    </div>
+    <div class="hero-visual" id="card">
+      <div class="badge-float top-right"><div class="badge-dot green"></div>نظام نشط</div>
+      <div class="floating-card">
+        <div class="fc-header">
+          <div class="fc-header-left"><h3>بطاقة الطوارئ الطبية</h3><p>Emergency Medical Card · emcard.health</p></div>
+          <div class="fc-logo">✚</div>
+        </div>
+        <div class="fc-body">
+          <div class="fc-patient">
+            <div class="fc-avatar">👦</div>
+            <div><div class="fc-name">أحمد صالح</div><div class="fc-meta">٥ سنوات · ذكر · فصيلة: O+</div></div>
+          </div>
+          <div class="fc-rows">
+            <div class="fc-row"><div class="fc-row-icon alert">⚠️</div><div class="fc-row-info"><div class="fc-row-label">تنبيه طارئ</div><div class="fc-row-value">يمنع الصيام — خطر هبوط السكر</div></div></div>
+            <div class="fc-row"><div class="fc-row-icon med">💊</div><div class="fc-row-info"><div class="fc-row-label">الدواء</div><div class="fc-row-value">L-Carnitine · 50mg/kg/day</div></div></div>
+            <div class="fc-row"><div class="fc-row-icon diag">🧬</div><div class="fc-row-info"><div class="fc-row-label">التشخيص</div><div class="fc-row-value">MCADD</div></div></div>
+            <div class="fc-row"><div class="fc-row-icon contact">📞</div><div class="fc-row-info"><div class="fc-row-label">ولي الأمر</div><div class="fc-row-value">صالح: 0500000000</div></div></div>
+          </div>
+        </div>
+        <div class="fc-qr">
+          <div class="qr-box">
+            <div class="qr-px"></div><div class="qr-px b"></div><div class="qr-px"></div><div class="qr-px b"></div><div class="qr-px"></div><div class="qr-px b"></div>
+            <div class="qr-px b"></div><div class="qr-px"></div><div class="qr-px b"></div><div class="qr-px"></div><div class="qr-px b"></div><div class="qr-px"></div>
+            <div class="qr-px"></div><div class="qr-px b"></div><div class="qr-px"></div><div class="qr-px b"></div><div class="qr-px"></div><div class="qr-px b"></div>
+            <div class="qr-px b"></div><div class="qr-px"></div><div class="qr-px b"></div><div class="qr-px"></div><div class="qr-px b"></div><div class="qr-px"></div>
+            <div class="qr-px"></div><div class="qr-px b"></div><div class="qr-px"></div><div class="qr-px b"></div><div class="qr-px"></div><div class="qr-px b"></div>
+            <div class="qr-px b"></div><div class="qr-px"></div><div class="qr-px b"></div><div class="qr-px"></div><div class="qr-px b"></div><div class="qr-px"></div>
+          </div>
+          <div class="fc-qr-text">امسح للوصول الفوري<strong>emcard.health/p/AS-2401</strong>بدون تطبيق · بدون إنترنت</div>
+        </div>
+      </div>
+      <div class="badge-float bottom-left"><div class="badge-dot blue"></div>MCADD · تنبيه فوري</div>
+    </div>
+  </div>
+</section>
+<section class="features reveal" id="features">
+  <div class="section-header">
+    <div class="section-tag">المميزات</div>
+    <h2 class="section-title">مصمم للطوارئ الحقيقية</h2>
+    <p class="section-sub">كل تفصيلة صُممت من تجربة ميدانية حقيقية — يبدأ من مسار طوارئ الأطفال ويتوسع لجميع التخصصات</p>
+  </div>
+  <div class="features-grid">
+    <div class="feature-item reveal"><div class="feature-icon-wrap">⚡</div><h3 class="feature-h">وصول فوري</h3><p class="feature-p">مسح واحد بكاميرا الجوال يفتح الملف الطبي كاملاً في ٣ ثوانٍ — بدون تسجيل دخول</p></div>
+    <div class="feature-item reveal"><div class="feature-icon-wrap">🌐</div><h3 class="feature-h">ثنائي اللغة</h3><p class="feature-p">عربي وإنجليزي تلقائياً — يخدم الطاقم الطبي المتنوع في بيئات العمل السعودية</p></div>
+    <div class="feature-item reveal"><div class="feature-icon-wrap">🔒</div><h3 class="feature-h">خصوصية محكمة</h3><p class="feature-p">تتحكم في المعلومات المرئية — يُعرض ما يُحتاج في الطارئ فقط دون بيانات حساسة</p></div>
+    <div class="feature-item reveal"><div class="feature-icon-wrap">👥</div><h3 class="feature-h">للجميع — قابل للتوسع</h3><p class="feature-p">يبدأ بمسار طوارئ الأطفال ويتوسع لجميع المرضى — أطفال، بالغين، وكبار السن</p></div>
+    <div class="feature-item reveal"><div class="feature-icon-wrap">🖨️</div><h3 class="feature-h">قابل للطباعة</h3><p class="feature-p">حجم بطاقة الهوية — تُلصق في الملف الورقي أو تُعطى للأهل أو تُحفظ في الجوال</p></div>
+    <div class="feature-item reveal"><div class="feature-icon-wrap">🧬</div><h3 class="feature-h">للأمراض النادرة</h3><p class="feature-p">مثالي لـ MCADD، فينيل كيتونيوريا، الهيموفيليا، والحالات المزمنة التي تتطلب تدخلاً خاصاً</p></div>
+  </div>
+</section>
+<section class="how reveal" id="how">
+  <div class="how-inner">
+    <div class="section-header">
+      <div class="section-tag">كيف تعمل</div>
+      <h2 class="section-title">٣ خطوات فقط</h2>
+      <p class="section-sub">من إدخال البيانات إلى بطاقة جاهزة في دقائق</p>
+    </div>
+    <div class="steps-grid">
+      <div class="step-item reveal"><div class="step-num">١</div><h3 class="step-title">أدخل بيانات المريض</h3><p class="step-desc">الحساسية، الأدوية، التشخيص، وبيانات التواصل في نموذج بسيط بالعربية والإنجليزية</p></div>
+      <div class="step-item reveal"><div class="step-num">٢</div><h3 class="step-title">استلم البطاقة + QR</h3><p class="step-desc">يُولَّد QR Code مشفر مرتبط بالملف الطبي — اطبعه، احفظه، أو شاركه فوراً</p></div>
+      <div class="step-item reveal"><div class="step-num">٣</div><h3 class="step-title">الطاقم يمسح في الطارئ</h3><p class="step-desc">أي طبيب أو ممرض يمسح الـ QR ويحصل على كامل المعلومات الحرجة فوراً</p></div>
+    </div>
+  </div>
+</section>
+<section class="alert-section reveal">
+  <div class="alert-inner">
+    <div class="alert-icon-big">🚨</div>
+    <div class="alert-content">
+      <h3>مثال حقيقي — طفل بـ MCADD</h3>
+      <p>طفل يدخل الطوارئ فاقد الوعي — الأهل لا يمكنهم الشرح. الطبيب يمسح البطاقة ويرى فوراً: "يمنع الصيام — قياس السكر فوراً — إعطاء D10W IV إذا السكر أقل من 70 mg/dL". قرار طبي صحيح في ثوانٍ بدلاً من دقائق قد تكون حاسمة.</p>
+      <div class="alert-pills">
+        <span class="alert-pill">⚠️ يمنع الصيام</span>
+        <span class="alert-pill">🩸 قياس السكر فوراً</span>
+        <span class="alert-pill">💉 D10W IV Bolus</span>
+        <span class="alert-pill">📞 طبيب الوراثة</span>
+      </div>
+    </div>
+  </div>
+</section>
+<section class="cta-section reveal">
+  <div class="cta-content">
+    <h2>جهّز بطاقة مريضك اليوم</h2>
+    <p>المشروع قيد التطوير — يبدأ من مسار طوارئ الأطفال في مجموعة القصيم الصحية ويتوسع لاحقاً. سيُطلق قريباً.</p>
+    <a href="mailto:fahad.radhi.alharbi@gmail.com" class="btn-white">📧 تواصل مع الفريق</a>
+  </div>
+</section>
+<footer>
+  <div class="footer-logo"><div class="footer-cross">✚</div><div class="footer-brand">emcard.health</div></div>
+  <p>مشروع تطوير سريري | <a href="#">مسار طوارئ الأطفال · مجموعة القصيم الصحية</a></p>
+  <p style="margin-top:0.5rem;">© ٢٠٢٦ · د. فهد راضي الحربي</p>
+</footer>
+<script>
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('visible'); });
+}, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+</script>
+</body>
+</html>
